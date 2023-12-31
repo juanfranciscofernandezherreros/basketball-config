@@ -1,0 +1,47 @@
+package com.fernandez.results.basketball.service.impl;
+import com.fernandez.results.basketball.domain.BasketballDomainService;
+import com.fernandez.results.basketball.dto.BasketballConfigDTO;
+import com.fernandez.results.basketball.mapper.BasketballMapper;
+import com.fernandez.results.basketball.service.BasketballService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+@Service
+@Slf4j
+public class BasketballServiceImpl implements BasketballService {
+
+    @Autowired
+    private BasketballDomainService basketballDomainService;
+    @Autowired
+    private BasketballMapper basketballMapper;
+
+    @Override
+    public Page<BasketballConfigDTO> findAllByDynamicCriteria(Map<String, String> params, int page, int size) {
+        return basketballDomainService.findAllByDynamicCriteria(params,page,size);
+    }
+
+    @Override
+    public BasketballConfigDTO findConfigById(Long id) {
+        return basketballDomainService.findById(id);
+    }
+
+    @Override
+    public List<BasketballConfigDTO> saveAll(List<BasketballConfigDTO> basketballConfigDTOList) {
+        return basketballDomainService.saveAll(basketballMapper.mapListToDAO(basketballConfigDTOList));
+    }
+
+    @Override
+    public List<BasketballConfigDTO> updateAll(List<BasketballConfigDTO> fixturesList) {
+        return basketballDomainService.updateAll(basketballMapper.mapListToDAO(fixturesList));
+    }
+
+    @Override
+    public void deleteByIds(List<String> matchIds) {
+        basketballDomainService.deleteByIds(matchIds);
+    }
+}
