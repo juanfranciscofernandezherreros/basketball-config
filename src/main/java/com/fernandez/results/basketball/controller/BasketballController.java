@@ -46,15 +46,21 @@ public class BasketballController {
     }
 
     @DeleteMapping("{country}/{competition}/{seasson}")
-    public void deleteById(
-            @PathVariable("country") String country,
-            @PathVariable("competition") String competition,
-            @PathVariable("seasson") String seasson) {
+    public ResponseEntity<String> deleteById(@PathVariable("country") String country,
+                                             @PathVariable("competition") String competition,
+                                             @PathVariable("seasson") String seasson) {
+        try {
             BasketballConfigDTO basketballConfigDTO = new BasketballConfigDTO();
             basketballConfigDTO.setCountry(country);
             basketballConfigDTO.setCompetition(competition);
             basketballConfigDTO.setSeasson(seasson);
             basketballService.deleteById(basketballConfigDTO);
+            return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
+        } catch (MyEntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

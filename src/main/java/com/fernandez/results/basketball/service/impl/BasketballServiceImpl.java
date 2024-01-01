@@ -2,6 +2,7 @@ package com.fernandez.results.basketball.service.impl;
 import com.fernandez.results.basketball.dao.BasketballConfigPKDAO;
 import com.fernandez.results.basketball.domain.BasketballDomainService;
 import com.fernandez.results.basketball.dto.BasketballConfigDTO;
+import com.fernandez.results.basketball.entity.MyEntityNotFoundException;
 import com.fernandez.results.basketball.mapper.BasketballMapper;
 import com.fernandez.results.basketball.service.BasketballService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,16 @@ public class BasketballServiceImpl implements BasketballService {
 
     @Override
     public void deleteById(BasketballConfigDTO basketballConfigDTO) {
-        basketballDomainService.deleteByIds(basketballConfigDTO);
+        try {
+            basketballDomainService.deleteByIds(basketballConfigDTO);
+        } catch (MyEntityNotFoundException e) {
+            // Log the exception and rethrow or handle as needed
+            log.error("MyEntityNotFoundException: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            // Log the exception and rethrow or handle as needed
+            log.error("Exception during deleteById: {}", e.getMessage());
+            throw new RuntimeException("Error deleting configuration", e);
+        }
     }
 }

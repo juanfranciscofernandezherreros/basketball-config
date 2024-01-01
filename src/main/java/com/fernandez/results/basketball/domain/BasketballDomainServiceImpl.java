@@ -41,11 +41,31 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
         basketballConfigPKDAO.setCompetition(basketballConfigDTO.getCompetition());
         basketballConfigPKDAO.setCountry(basketballConfigDTO.getCountry());
         basketballConfigPKDAO.setSeasson(basketballConfigDTO.getSeasson());
-        Optional<BasketballConfigDAO> optionalFixturesDAO = basketballRepository.findById(basketballConfigPKDAO);
-        BasketballConfigDAO basketballConfigDAO = optionalFixturesDAO.orElseThrow(() ->
-                new MyEntityNotFoundException("Fixtures with matchId " + basketballConfigPKDAO + " not found"));
-        basketballRepository.deleteById(basketballConfigPKDAO);
+        try {
+            // Perform a findById operation
+            Optional<BasketballConfigDAO> optionalConfigDAO = basketballRepository.findById(basketballConfigPKDAO);
+
+            // Check if the entity exists before attempting deletion
+            if (optionalConfigDAO.isPresent()) {
+                // Your existing logic for deletion
+                basketballRepository.deleteById(basketballConfigPKDAO);
+            } else {
+                // Log the exception and rethrow or handle as needed
+                throw new MyEntityNotFoundException("Configuration not found for " + basketballConfigPKDAO);
+            }
+        } catch (MyEntityNotFoundException e) {
+            // Log the exception and rethrow or handle as needed
+            log.error("MyEntityNotFoundException: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            // Log the exception and rethrow or handle as needed
+            log.error("Exception during deleteByIds: {}", e.getMessage());
+            throw new RuntimeException("Error deleting configuration", e);
+        }
     }
+
+
+
 
     @Override
     public List<BasketballConfigDTO> saveAll(List<BasketballConfigDAO> basketballConfigDTOList) {
