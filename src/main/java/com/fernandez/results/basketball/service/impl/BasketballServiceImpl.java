@@ -1,4 +1,5 @@
 package com.fernandez.results.basketball.service.impl;
+import com.fernandez.results.basketball.dao.BasketballConfigPKDAO;
 import com.fernandez.results.basketball.domain.BasketballDomainService;
 import com.fernandez.results.basketball.dto.BasketballConfigDTO;
 import com.fernandez.results.basketball.mapper.BasketballMapper;
@@ -26,7 +27,7 @@ public class BasketballServiceImpl implements BasketballService {
     }
 
     @Override
-    public BasketballConfigDTO findConfigById(Long id) {
+    public BasketballConfigDTO findConfigById(BasketballConfigDTO id) {
         return basketballDomainService.findById(id);
     }
 
@@ -41,7 +42,7 @@ public class BasketballServiceImpl implements BasketballService {
     }
 
     @Override
-    public void deleteByIds(List<String> matchIds) {
+    public void deleteByIds(List<Long> matchIds) {
         basketballDomainService.deleteByIds(matchIds);
     }
 }

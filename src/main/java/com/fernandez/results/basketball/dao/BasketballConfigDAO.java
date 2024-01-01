@@ -14,10 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "BASKETBALL_CONFIG")
 public class BasketballConfigDAO {
     @Id
-    private Long id;
-    private String country;
-    private String competition;
-    private String seasson;
+    private BasketballConfigPKDAO basketballConfigPKDAO;
     private Boolean hasSummary;
     private Boolean hasPlayerStatics;
     private Boolean hasStats0;

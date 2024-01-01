@@ -1,6 +1,7 @@
 package com.fernandez.results.basketball.domain;
 
 import com.fernandez.results.basketball.dao.BasketballConfigDAO;
+import com.fernandez.results.basketball.dao.BasketballConfigPKDAO;
 import com.fernandez.results.basketball.dto.BasketballConfigDTO;
 import com.fernandez.results.basketball.entity.MyEntityNotFoundException;
 import com.fernandez.results.basketball.mapper.BasketballMapper;
@@ -41,24 +42,27 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
     }
 
     @Override
-    public BasketballConfigDTO findById(Long id) {
-        log.info("Finding findById by id: {}", id);
-        Optional<BasketballConfigDAO> optionalFixturesDAO = basketballRepository.findById(id);
+    public BasketballConfigDTO findById(BasketballConfigDTO basketballConfigDTO) {
+        BasketballConfigPKDAO basketballConfigPKDAO = new BasketballConfigPKDAO();
+        basketballConfigPKDAO.setCompetition(basketballConfigDTO.getCompetition());
+        basketballConfigPKDAO.setCountry(basketballConfigDTO.getCountry());
+        basketballConfigPKDAO.setSeasson(basketballConfigDTO.getSeasson());
+        Optional<BasketballConfigDAO> optionalFixturesDAO = basketballRepository.findById(basketballConfigPKDAO);
         // Use orElseThrow to throw EntityNotFoundException if the entity is not present
         BasketballConfigDAO basketballConfigDAO = optionalFixturesDAO.orElseThrow(() ->
-                new MyEntityNotFoundException("Fixtures with matchId " + id + " not found"));
+                new MyEntityNotFoundException("Fixtures with matchId " + basketballConfigPKDAO + " not found"));
         // Map the FixturesDAO to a FixturesDTO and return it
         return basketballMapper.mapToDTO(basketballConfigDAO);
     }
 
     @Override
-    public List<BasketballConfigDTO> updateAll(List<BasketballConfigDAO> fixturesList) {
-        return null;
+    public List<BasketballConfigDTO> updateAll(List<BasketballConfigDAO> basketballConfigDAOS) {
+        return basketballMapper.mapListToDTO(basketballRepository.saveAll(basketballConfigDAOS));
     }
 
     @Override
-    public void deleteByIds(List<String> ids) {
+    public void deleteByIds(List<Long> ids) {
         log.info("Deleting config by ids: {}", ids);
-        basketballRepository.deleteByIds(ids);
+        basketballRepository.deleteAllById(null);
     }
 }

@@ -1,5 +1,6 @@
 package com.fernandez.results.basketball.controller;
 
+import com.fernandez.results.basketball.dao.BasketballConfigPKDAO;
 import com.fernandez.results.basketball.dto.BasketballConfigDTO;
 import com.fernandez.results.basketball.entity.MyEntityNotFoundException;
 import com.fernandez.results.basketball.service.BasketballService;
@@ -25,10 +26,17 @@ public class BasketballController {
         return new ResponseEntity<>(partidos, HttpStatus.OK);
     }
 
-    @GetMapping("{matchId}")
-    public ResponseEntity<BasketballConfigDTO> findById(@PathVariable("id") Long id) {
+    @GetMapping("{country}/{competition}/{seasson}")
+    public ResponseEntity<BasketballConfigDTO> findById(
+            @PathVariable("country") String country,
+            @PathVariable("competition") String competition,
+            @PathVariable("seasson") String seasson) {
         try {
-            BasketballConfigDTO fixture = basketballService.findConfigById(id);
+            BasketballConfigDTO basketballConfigDTO = new BasketballConfigDTO();
+            basketballConfigDTO.setCountry(country);
+            basketballConfigDTO.setCompetition(competition);
+            basketballConfigDTO.setSeasson(seasson);
+            BasketballConfigDTO fixture = basketballService.findConfigById(basketballConfigDTO);
             return new ResponseEntity<>(fixture, HttpStatus.OK);
         } catch (MyEntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -51,7 +59,7 @@ public class BasketballController {
     }
 
     @DeleteMapping("/deleteByIds")
-    public void deleteByIds(@RequestBody List<String> matchIds) {
+    public void deleteByIds(@RequestBody List<Long> matchIds) {
         basketballService.deleteByIds(matchIds);
     }
 
