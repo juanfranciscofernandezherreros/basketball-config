@@ -64,7 +64,6 @@ public class BasketballController {
     }
 
 
-
     @PostMapping
     public ResponseEntity<List<BasketballConfigDTO>> saveAll(@RequestBody List<BasketballConfigDTO> fixturesList) {
         List<BasketballConfigDTO> fixturesDTOList = basketballService.saveAll(fixturesList);
@@ -76,8 +75,4 @@ public class BasketballController {
         List<BasketballConfigDTO> fixturesDTOList = basketballService.updateAll(fixturesList);
         return new ResponseEntity<List<BasketballConfigDTO>>(fixturesDTOList, HttpStatus.OK);
     }
-
-
-
-
 }

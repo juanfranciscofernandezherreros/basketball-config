@@ -24,4 +24,6 @@ public class BasketballConfigDTO {
     private Boolean hasMatchHistory2;
     private Boolean hasMatchHistory3;
     private Boolean hasMatchHistory4;
+
+
 }
