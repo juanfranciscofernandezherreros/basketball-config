@@ -42,7 +42,7 @@ public class BasketballServiceImpl implements BasketballService {
     }
 
     @Override
-    public void deleteByIds(List<Long> matchIds) {
-        basketballDomainService.deleteByIds(matchIds);
+    public void deleteById(BasketballConfigDTO basketballConfigDTO) {
+        basketballDomainService.deleteByIds(basketballConfigDTO);
     }
 }

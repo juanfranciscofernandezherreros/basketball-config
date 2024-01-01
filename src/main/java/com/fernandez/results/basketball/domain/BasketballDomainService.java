@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface BasketballDomainService {
-    void deleteByIds(List<Long> matchIds);
 
     List<BasketballConfigDTO> updateAll(List<BasketballConfigDAO> mapListToDAO);
 
@@ -18,4 +17,6 @@ public interface BasketballDomainService {
     BasketballConfigDTO findById(BasketballConfigDTO id);
 
     Page<BasketballConfigDTO> findAllByDynamicCriteria(Map<String, String> params, int page, int size);
+
+    void deleteByIds(BasketballConfigDTO basketballConfigDTO);
 }

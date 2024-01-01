@@ -45,6 +45,19 @@ public class BasketballController {
         }
     }
 
+    @DeleteMapping("{country}/{competition}/{seasson}")
+    public void deleteById(
+            @PathVariable("country") String country,
+            @PathVariable("competition") String competition,
+            @PathVariable("seasson") String seasson) {
+            BasketballConfigDTO basketballConfigDTO = new BasketballConfigDTO();
+            basketballConfigDTO.setCountry(country);
+            basketballConfigDTO.setCompetition(competition);
+            basketballConfigDTO.setSeasson(seasson);
+            basketballService.deleteById(basketballConfigDTO);
+    }
+
+
 
     @PostMapping
     public ResponseEntity<List<BasketballConfigDTO>> saveAll(@RequestBody List<BasketballConfigDTO> fixturesList) {
@@ -58,10 +71,7 @@ public class BasketballController {
         return new ResponseEntity<List<BasketballConfigDTO>>(fixturesDTOList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteByIds")
-    public void deleteByIds(@RequestBody List<Long> matchIds) {
-        basketballService.deleteByIds(matchIds);
-    }
+
 
 
 }

@@ -15,6 +15,5 @@ public interface BasketballService {
     List<BasketballConfigDTO> saveAll(List<BasketballConfigDTO> fixturesList);
 
     List<BasketballConfigDTO> updateAll(List<BasketballConfigDTO> fixturesList);
-
-    void deleteByIds(List<Long> matchIds);
+    void deleteById(BasketballConfigDTO basketballConfigDTO);
 }

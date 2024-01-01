@@ -36,6 +36,18 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
     }
 
     @Override
+    public void deleteByIds(BasketballConfigDTO basketballConfigDTO) {
+        BasketballConfigPKDAO basketballConfigPKDAO = new BasketballConfigPKDAO();
+        basketballConfigPKDAO.setCompetition(basketballConfigDTO.getCompetition());
+        basketballConfigPKDAO.setCountry(basketballConfigDTO.getCountry());
+        basketballConfigPKDAO.setSeasson(basketballConfigDTO.getSeasson());
+        Optional<BasketballConfigDAO> optionalFixturesDAO = basketballRepository.findById(basketballConfigPKDAO);
+        BasketballConfigDAO basketballConfigDAO = optionalFixturesDAO.orElseThrow(() ->
+                new MyEntityNotFoundException("Fixtures with matchId " + basketballConfigPKDAO + " not found"));
+        basketballRepository.deleteById(basketballConfigPKDAO);
+    }
+
+    @Override
     public List<BasketballConfigDTO> saveAll(List<BasketballConfigDAO> basketballConfigDTOList) {
         log.info("Saving list of configs...");
         return basketballMapper.mapListToDTO(basketballRepository.saveAll(basketballConfigDTOList));
@@ -60,9 +72,5 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
         return basketballMapper.mapListToDTO(basketballRepository.saveAll(basketballConfigDAOS));
     }
 
-    @Override
-    public void deleteByIds(List<Long> ids) {
-        log.info("Deleting config by ids: {}", ids);
-        basketballRepository.deleteAllById(null);
-    }
+
 }
