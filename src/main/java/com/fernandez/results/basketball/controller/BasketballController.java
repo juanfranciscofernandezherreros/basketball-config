@@ -26,20 +26,20 @@ public class BasketballController {
         return new ResponseEntity<>(partidos, HttpStatus.OK);
     }
 
-    @GetMapping("{country}/{competition}/{seasson}")
-    public ResponseEntity<BasketballConfigDTO> findById(
+    @GetMapping("/{country}/{competition}/{season}")
+    public ResponseEntity<?> findById(
             @PathVariable("country") String country,
             @PathVariable("competition") String competition,
-            @PathVariable("seasson") String seasson) {
+            @PathVariable("season") String season) {
         try {
             BasketballConfigDTO basketballConfigDTO = new BasketballConfigDTO();
             basketballConfigDTO.setCountry(country);
             basketballConfigDTO.setCompetition(competition);
-            basketballConfigDTO.setSeasson(seasson);
-            BasketballConfigDTO fixture = basketballService.findConfigById(basketballConfigDTO);
-            return new ResponseEntity<>(fixture, HttpStatus.OK);
+            basketballConfigDTO.setSeasson(season);
+            BasketballConfigDTO config = basketballService.findConfigById(basketballConfigDTO);
+            return new ResponseEntity<>(config, HttpStatus.OK);
         } catch (MyEntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

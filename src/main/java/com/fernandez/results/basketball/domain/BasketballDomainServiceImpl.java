@@ -63,10 +63,6 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
             throw new RuntimeException("Error deleting configuration", e);
         }
     }
-
-
-
-
     @Override
     public List<BasketballConfigDTO> saveAll(List<BasketballConfigDAO> basketballConfigDTOList) {
         log.info("Saving list of configs...");
@@ -75,16 +71,26 @@ public class BasketballDomainServiceImpl implements BasketballDomainService {
 
     @Override
     public BasketballConfigDTO findById(BasketballConfigDTO basketballConfigDTO) {
-        BasketballConfigPKDAO basketballConfigPKDAO = new BasketballConfigPKDAO();
-        basketballConfigPKDAO.setCompetition(basketballConfigDTO.getCompetition());
-        basketballConfigPKDAO.setCountry(basketballConfigDTO.getCountry());
-        basketballConfigPKDAO.setSeasson(basketballConfigDTO.getSeasson());
-        Optional<BasketballConfigDAO> optionalFixturesDAO = basketballRepository.findById(basketballConfigPKDAO);
-        // Use orElseThrow to throw EntityNotFoundException if the entity is not present
-        BasketballConfigDAO basketballConfigDAO = optionalFixturesDAO.orElseThrow(() ->
-                new MyEntityNotFoundException("Fixtures with matchId " + basketballConfigPKDAO + " not found"));
-        // Map the FixturesDAO to a FixturesDTO and return it
-        return basketballMapper.mapToDTO(basketballConfigDAO);
+        BasketballConfigPKDAO configPKDAO = new BasketballConfigPKDAO();
+        configPKDAO.setCompetition(basketballConfigDTO.getCompetition());
+        configPKDAO.setCountry(basketballConfigDTO.getCountry());
+        configPKDAO.setSeasson(basketballConfigDTO.getSeasson());
+
+        try {
+            Optional<BasketballConfigDAO> optionalConfigDAO = basketballRepository.findById(configPKDAO);
+
+            if (!optionalConfigDAO.isPresent()) {
+                throw new MyEntityNotFoundException("Configuration not found for " + configPKDAO);
+            } else {
+                return basketballMapper.mapToDTO(optionalConfigDAO.get());
+            }
+        } catch (MyEntityNotFoundException e) {
+            log.error("MyEntityNotFoundException: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Exception during findById: {}", e.getMessage());
+            throw new RuntimeException("Error finding configuration", e);
+        }
     }
 
     @Override

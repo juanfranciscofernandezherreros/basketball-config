@@ -29,7 +29,15 @@ public class BasketballServiceImpl implements BasketballService {
 
     @Override
     public BasketballConfigDTO findConfigById(BasketballConfigDTO id) {
-        return basketballDomainService.findById(id);
+        try {
+            return basketballDomainService.findById(id);
+        } catch (MyEntityNotFoundException e) {
+            log.error("MyEntityNotFoundException: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Exception during findConfigById: {}", e.getMessage());
+            throw new RuntimeException("Error finding configuration", e);
+        }
     }
 
     @Override
